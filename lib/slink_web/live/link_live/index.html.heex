@@ -13,7 +13,11 @@
   row_click={fn {_id, link} -> JS.navigate(~p"/links/#{link}") end}
 >
   <:col :let={{_id, link}} label="Title"><%= link.title %></:col>
-  <:col :let={{_id, link}} label="Url"><%= link.url %></:col>
+  <:col :let={{_id, link}} label="Url">
+    <a href={link.url} class="hover:text-zinc-700">
+      <%= link.url |> String.slice(0..80) %>
+    </a>
+  </:col>
   <:action :let={{_id, link}}>
     <div class="sr-only">
       <.link navigate={~p"/links/#{link}"}>Show</.link>

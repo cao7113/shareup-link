@@ -3,8 +3,8 @@ defmodule Slink.Repo.Migrations.CreateLinks do
 
   def change do
     create table(:links) do
-      add :title, :string
-      add :url, :string
+      add :title, :string, size: 255
+      add :url, :string, size: 400
 
       timestamps()
     end

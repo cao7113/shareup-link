@@ -3,10 +3,47 @@ defmodule Slink.Links do
   The Links context.
   """
 
+  require Logger
   import Ecto.Query, warn: false
   alias Slink.Repo
-
   alias Slink.Links.Link
+
+  @permit_link_keys [:title, :url]
+
+  @doc """
+  submit batch links params from user
+  """
+  def batch_submit(links_params) when is_list(links_params) do
+    links_params
+    |> Enum.map(fn it ->
+      it
+      |> MapHelper.cast_plain_params(@permit_link_keys)
+      |> Map.update!(:url, fn url ->
+        len = String.length(url)
+
+        if len > 400 do
+          Logger.warn("url too long. (#{len} > 400) url: #{url}")
+          String.slice(url, 0..399)
+        else
+          url
+        end
+      end)
+      |> Map.update!(:title, fn title ->
+        len = String.length(title)
+
+        if len > 200 do
+          Logger.warn("url too long. (#{len} > 200) url: #{title}")
+          String.slice(title, 0..199)
+        else
+          title
+        end
+      end)
+    end)
+    |> RepoHelper.batch_import(Repo, Link,
+      on_conflict: :nothing,
+      conflict_target: [:url]
+    )
+  end
 
   @doc """
   Returns the list of links.
