@@ -44,7 +44,7 @@ MIX_ENV=$mixenv $mixcmd ecto.migrate
 # https://hexdocs.pm/phoenix/releases.html
 # https://hexdocs.pm/mix/Mix.Tasks.Release.html
 
-MIX_ENV=$mixenv mix ssets.deploy
+MIX_ENV=$mixenv mix assets.deploy
 # mix phx.gen.release
 MIX_ENV=$mixenv $mixcmd release --overwrite
 
@@ -52,7 +52,7 @@ relbin=_build/$mixenv/rel/$appname/bin/$appname
 echo "$appname old daemon pid=$($relbin pid)" || true
 $relbin stop || true
 
-$relbin start
+$relbin daemon_iex
 sleep 3
 echo "$appname new daemon pid=$($relbin pid)"
 
