@@ -1,0 +1,22 @@
+# https://taskfile.dev
+version: "3"
+env:
+  LOCAL_HOST: http://localhost:4000
+
+tasks:
+  default: mix test
+  sh: iex --erl "-kernel shell_history enabled" -S mix
+  run: iex --erl "-kernel shell_history enabled" -S mix phx.server
+  sql: pgcli slink_dev
+  mail: open $LOCAL_HOST/dev/mailbox
+
+  # local release run in dev mode
+  lp: task lp-stop && task lp-run -- daemon
+  lp-run:
+    cmds:
+      - |
+        source .env.local.prod
+        mix release --overwrite=true 
+        _build/dev/rel/slink/bin/slink {{.CLI_ARGS}}
+  lp-stop: _build/dev/rel/slink/bin/slink stop
+  lps: task lp-stop && task lp-run -- start
