@@ -10,13 +10,23 @@ tasks:
   sql: pgcli slink_dev
   mail: open $LOCAL_HOST/dev/mailbox
 
+  reset-test-db:
+    cmds:
+      - MIX_ENV=test mix ecto.drop
+  prel: MIX_ENV=prod mix release --overwrite
+
   # local release run in dev mode
+  lp-test:
+    dir: local-prod
+    cmds:
+      - pwd
   lp: task lp-stop && task lp-run -- daemon
   lp-run:
+    dir: local-prod
     cmds:
-      - |
-        source .env.local.prod
-        mix release --overwrite=true 
-        _build/dev/rel/slink/bin/slink {{.CLI_ARGS}}
-  lp-stop: _build/dev/rel/slink/bin/slink stop
+      - run/prod.sh
+  lp-stop:
+    dir: local-prod
+    cmds:
+      - _build/dev/rel/slink/bin/slink stop
   lps: task lp-stop && task lp-run -- start
