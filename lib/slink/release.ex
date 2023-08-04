@@ -18,6 +18,12 @@ defmodule Slink.Release do
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
 
+  def back_steps(step) when is_integer(step) do
+    # todo find migration numbers
+  end
+
+  def repo(), do: repos() |> hd()
+
   defp repos do
     Application.fetch_env!(@app, :ecto_repos)
   end

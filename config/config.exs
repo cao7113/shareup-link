@@ -10,6 +10,9 @@ import Config
 config :slink,
   ecto_repos: [Slink.Repo]
 
+config :endon,
+  repo: Slink.Repo
+
 # Configures the endpoint
 config :slink, SlinkWeb.Endpoint,
   url: [host: "localhost"],

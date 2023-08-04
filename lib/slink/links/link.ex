@@ -1,10 +1,11 @@
 defmodule Slink.Links.Link do
   use Ecto.Schema
+  use Endon
   import Ecto.Changeset
 
   schema "links" do
-    field :title, :string
-    field :url, :string
+    field(:title, :string)
+    field(:url, :string)
 
     timestamps()
   end
