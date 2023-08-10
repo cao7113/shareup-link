@@ -54,8 +54,13 @@ defmodule Slink.Links do
       [%Link{}, ...]
 
   """
-  def list_links do
-    Repo.all(Link)
+  def list_links(opts \\ []) do
+    limit = opts[:limit] || 100
+
+    Link
+    |> order_by(desc: :id)
+    |> limit(^limit)
+    |> Repo.all()
   end
 
   @doc """

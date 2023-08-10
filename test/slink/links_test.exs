@@ -26,6 +26,18 @@ defmodule Slink.LinksTest do
       assert {:ok, %Link{} = link} = Links.create_link(valid_attrs)
       assert link.title == "some title"
       assert link.url == "some url"
+
+      # create again
+      {:error,
+       %{
+         action: :insert,
+         changes: %{title: "some title", url: "some url"},
+         errors: [
+           url:
+             {"has already been taken", [constraint: :unique, constraint_name: "links_url_index"]}
+         ],
+         valid?: false
+       }} = Links.create_link(valid_attrs)
     end
 
     test "create_link/1 with invalid data returns error changeset" do

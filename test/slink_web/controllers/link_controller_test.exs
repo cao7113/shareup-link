@@ -37,6 +37,12 @@ defmodule SlinkWeb.LinkControllerTest do
                "title" => "some title",
                "url" => "some url"
              } = json_response(conn, 200)["data"]
+
+      conn = post(conn, ~p"/api/links", link: @create_attrs)
+
+      assert json_response(conn, 422) == %{
+               "errors" => %{"url" => ["has already been taken"]}
+             }
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

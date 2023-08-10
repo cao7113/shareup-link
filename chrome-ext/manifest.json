@@ -1,0 +1,37 @@
+{
+  "name": "Tab Demo",
+  "manifest_version": 3,
+  "version": "0.01",
+  "action": {
+    "default_popup": "popup.html" 
+  },
+  "permissions": [
+    "tabs",
+    "scripting", 
+    "activeTab"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "commands": {
+    "collect": {
+      "suggested_key": {
+        "default": "Ctrl+E",
+        "mac": "Command+E"
+      },
+      "description": "foo command"
+    },
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+K",
+        "mac": "Command+K"
+      },
+      "description": "Run action on the current page."
+    }
+  }
+}

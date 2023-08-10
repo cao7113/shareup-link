@@ -11,6 +11,17 @@ defmodule SlinkWeb.LinkController do
     render(conn, :index, links: links)
   end
 
+  def create(conn, %{"link" => link_params}) do
+    Logger.info("creating link: #{link_params |> inspect}")
+
+    with {:ok, %Link{} = link} <- Links.create_link(link_params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("location", ~p"/api/links/#{link}")
+      |> render(:show, link: link)
+    end
+  end
+
   def create(conn, %{"links" => links_params}) when is_list(links_params) do
     submit_cnt = length(links_params)
 
@@ -32,15 +43,6 @@ defmodule SlinkWeb.LinkController do
         diff: submit_cnt - real_import_cnt
       }
     })
-  end
-
-  def create(conn, %{"link" => link_params}) do
-    with {:ok, %Link{} = link} <- Links.create_link(link_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/links/#{link}")
-      |> render(:show, link: link)
-    end
   end
 
   def show(conn, %{"id" => id}) do
