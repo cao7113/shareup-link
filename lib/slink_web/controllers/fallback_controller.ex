@@ -18,7 +18,10 @@ defmodule SlinkWeb.FallbackController do
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)
-    |> put_view(html: SlinkWeb.ErrorHTML, json: SlinkWeb.ErrorJSON)
+    |> put_view(
+      html: SlinkWeb.ErrorHTML,
+      json: SlinkWeb.ErrorJSON
+    )
     |> render(:"404")
   end
 end

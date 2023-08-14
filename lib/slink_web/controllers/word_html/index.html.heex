@@ -1,0 +1,24 @@
+<.header>
+  Listing Words
+  <:actions>
+    <.link href={~p"/words/new"}>
+      <.button>New Word</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="words" rows={@words} row_click={&JS.navigate(~p"/words/#{&1}")}>
+  <:col :let={word} label="Word"><%= word.word %></:col>
+  <:col :let={word} label="Note"><%= word.note %></:col>
+  <:action :let={word}>
+    <div class="sr-only">
+      <.link navigate={~p"/words/#{word}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/words/#{word}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={word}>
+    <.link href={~p"/words/#{word}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

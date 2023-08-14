@@ -1,0 +1,16 @@
+<.header>
+  Word <%= @word.id %>
+  <:subtitle>This is a word record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/words/#{@word}/edit"}>
+      <.button>Edit word</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Word"><%= @word.word %></:item>
+  <:item title="Note"><%= @word.note %></:item>
+</.list>
+
+<.back navigate={~p"/words"}>Back to words</.back>
