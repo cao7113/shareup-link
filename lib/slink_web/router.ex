@@ -23,11 +23,16 @@ defmodule SlinkWeb.Router do
 
     # get "/", PageController, :index
     get("/welcome", PageController, :home)
+    get("/plain-page", PageController, :plain)
 
-    # normal words
+    # normal words with controller
     resources("/words", WordController)
 
-    # live links
+    # Living
+    live "/test-live", TestLive, :test
+    live "/test-form-live", TestFormLive, :test
+
+    # links live
     live("/links", LinkLive.Index, :index)
     live("/links/new", LinkLive.Index, :new)
     live("/links/:id/edit", LinkLive.Index, :edit)
@@ -35,8 +40,8 @@ defmodule SlinkWeb.Router do
     live("/links/:id/show/edit", LinkLive.Show, :edit)
   end
 
-  ####################################################################
-  ##          API
+  ############################################################
+  ##                API
 
   scope "/api", SlinkWeb do
     pipe_through(:api)
@@ -101,4 +106,19 @@ defmodule SlinkWeb.Router do
       live("/users/confirm", UserConfirmationInstructionsLive, :new)
     end
   end
+
+  # use Kaffy.Routes, scope: "/admin", pipe_through: [:some_plug, :authenticate]
+  use Kaffy.Routes, scope: "/admin", pipe_through: []
+  # :scope defaults to "/admin"
+  # :pipe_through defaults to kaffy's [:kaffy_browser]
+  # when providing pipelines, they will be added after :kaffy_browser
+  # so the actual pipe_through for the previous line is:
+  # [:kaffy_browser, :some_plug, :authenticate]
+  # pipeline :kaffy_browser do
+  #   plug :accepts, ["html", "json"]
+  #   plug :fetch_session
+  #   plug :fetch_flash
+  #   plug :protect_from_forgery
+  #   plug :put_secure_browser_headers
+  # end
 end

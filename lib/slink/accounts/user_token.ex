@@ -1,5 +1,6 @@
 defmodule Slink.Accounts.UserToken do
   use Ecto.Schema
+  use Endon
   import Ecto.Query
   alias Slink.Accounts.UserToken
 

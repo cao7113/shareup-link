@@ -1,5 +1,6 @@
 defmodule SlinkWeb.UserLoginLive do
   use SlinkWeb, :live_view
+  require Logger
 
   def render(assigns) do
     ~H"""
@@ -36,6 +37,7 @@ defmodule SlinkWeb.UserLoginLive do
   end
 
   def mount(_params, _session, socket) do
+    Logger.info("")
     email = live_flash(socket.assigns.flash, :email)
     form = to_form(%{"email" => email}, as: "user")
     {:ok, assign(socket, form: form), temporary_assigns: [form: form]}

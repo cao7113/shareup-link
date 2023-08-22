@@ -1,4 +1,5 @@
 import Ecto.Query
+alias Ecto.Changeset
 
 alias Slink.Repo
 alias Slink.Links.Link

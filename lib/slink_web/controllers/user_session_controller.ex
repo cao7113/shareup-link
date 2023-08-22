@@ -1,5 +1,6 @@
 defmodule SlinkWeb.UserSessionController do
   use SlinkWeb, :controller
+  require Logger
 
   alias Slink.Accounts
   alias SlinkWeb.UserAuth
@@ -18,7 +19,8 @@ defmodule SlinkWeb.UserSessionController do
     create(conn, params, "Welcome back!")
   end
 
-  defp create(conn, %{"user" => user_params}, info) do
+  defp create(conn, %{"user" => user_params} = params, info) do
+    Logger.info("session-create with params: #{params |> inspect} info: #{info}")
     %{"email" => email, "password" => password} = user_params
 
     if user = Accounts.get_user_by_email_and_password(email, password) do

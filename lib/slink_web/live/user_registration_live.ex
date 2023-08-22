@@ -1,10 +1,12 @@
 defmodule SlinkWeb.UserRegistrationLive do
   use SlinkWeb, :live_view
-
+  require Logger
   alias Slink.Accounts
   alias Slink.Accounts.User
 
   def render(assigns) do
+    Logger.info("render on pid: #{self() |> inspect} with assigns: #{assigns |> inspect}")
+
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
@@ -42,7 +44,11 @@ defmodule SlinkWeb.UserRegistrationLive do
     """
   end
 
-  def mount(_params, _session, socket) do
+  def mount(params, session, socket) do
+    Logger.info(
+      "mount on pid: #{self() |> inspect} with socket: #{socket |> inspect} session: #{session |> inspect} params: #{params |> inspect}"
+    )
+
     changeset = Accounts.change_user_registration(%User{})
 
     socket =
@@ -52,6 +58,14 @@ defmodule SlinkWeb.UserRegistrationLive do
 
     {:ok, socket, temporary_assigns: [form: nil]}
   end
+
+  # def handle_params(unsigned_params, uri, socket) do
+  #   Logger.info(
+  #     "handle_params on pid: #{self() |> inspect} with socket: #{socket |> inspect} uri: #{uri |> inspect} params: #{unsigned_params |> inspect}"
+  #   )
+
+  #   {:noreply, socket}
+  # end
 
   def handle_event("save", %{"user" => user_params}, socket) do
     case Accounts.register_user(user_params) do
@@ -70,7 +84,11 @@ defmodule SlinkWeb.UserRegistrationLive do
     end
   end
 
-  def handle_event("validate", %{"user" => user_params}, socket) do
+  def handle_event("validate", %{"user" => user_params} = params, socket) do
+    Logger.info(
+      "validate on pid: #{self() |> inspect} params: #{params |> inspect} socket: #{socket |> inspect}"
+    )
+
     changeset = Accounts.change_user_registration(%User{}, user_params)
     {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
   end
