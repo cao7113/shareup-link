@@ -64,7 +64,11 @@ config :phoenix, :json_library, Jason
 
 config :slink, :config_info, build_env: config_env()
 
-import_config("kaffy.exs")
+## Kaffy Admin
+config :kaffy,
+  otp_app: :slink,
+  ecto_repo: Slink.Repo,
+  router: SlinkWeb.Router
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
