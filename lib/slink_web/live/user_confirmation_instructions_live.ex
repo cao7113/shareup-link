@@ -1,5 +1,6 @@
 defmodule SlinkWeb.UserConfirmationInstructionsLive do
   use SlinkWeb, :live_view
+  require Logger
 
   alias Slink.Accounts
 
@@ -38,6 +39,8 @@ defmodule SlinkWeb.UserConfirmationInstructionsLive do
         user,
         &url(~p"/users/confirm/#{&1}")
       )
+    else
+      Logger.warn("non-user attempt to get confirmation link from email: #{email}")
     end
 
     info =

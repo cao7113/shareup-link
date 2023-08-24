@@ -28,7 +28,6 @@ defmodule SlinkWeb.WordController do
   end
 
   def show(conn, %{"id" => id}) do
-    Logger.warn("current session: #{get_session(conn) |> inspect} from word show")
     word = Words.get_word!(id)
     render(conn, :show, word: word)
   end
@@ -41,8 +40,6 @@ defmodule SlinkWeb.WordController do
 
   def update(conn, %{"id" => id, "word" => word_params}) do
     word = Words.get_word!(id)
-
-    Logger.warn("current session: #{get_session(conn) |> inspect} from word update")
 
     case Words.update_word(word, word_params) do
       {:ok, word} ->

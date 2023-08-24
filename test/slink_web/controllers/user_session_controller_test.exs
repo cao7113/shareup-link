@@ -87,7 +87,10 @@ defmodule SlinkWeb.UserSessionControllerTest do
     test "redirects to login page with invalid credentials", %{conn: conn} do
       conn =
         post(conn, ~p"/users/log_in", %{
-          "user" => %{"email" => "invalid@email.com", "password" => "invalid_password"}
+          "user" => %{
+            "email" => "invalid@email.com",
+            "password" => "invalid_password"
+          }
         })
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Invalid email or password"

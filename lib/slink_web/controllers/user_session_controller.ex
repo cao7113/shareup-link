@@ -20,13 +20,21 @@ defmodule SlinkWeb.UserSessionController do
   end
 
   defp create(conn, %{"user" => user_params} = params, info) do
-    Logger.info("session-create with params: #{params |> inspect} info: #{info}")
+    Logger.info(
+      "session-create with pid: #{self() |> inspect} params: #{params |> inspect} info: #{info} session: #{conn |> get_session() |> inspect}"
+    )
+
     %{"email" => email, "password" => password} = user_params
 
     if user = Accounts.get_user_by_email_and_password(email, password) do
       conn
       |> put_flash(:info, info)
       |> UserAuth.log_in_user(user, user_params)
+      |> tap(fn c ->
+        Logger.info(
+          "log-in with new session info: #{info} session: #{c |> get_session() |> inspect}"
+        )
+      end)
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn

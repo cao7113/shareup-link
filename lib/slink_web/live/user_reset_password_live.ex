@@ -15,7 +15,7 @@ defmodule SlinkWeb.UserResetPasswordLive do
         phx-change="validate"
       >
         <.error :if={@form.errors != []}>
-          Oops, something went wrong! Please check the errors below.
+          Oops, please check the errors below.
         </.error>
 
         <.input field={@form[:password]} type="password" label="New password" required />

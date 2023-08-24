@@ -32,6 +32,7 @@ defmodule SlinkWeb.UserConfirmationInstructionsLiveTest do
       assert Repo.get_by!(Accounts.UserToken, user_id: user.id).context == "confirm"
     end
 
+    @tag :capture_log
     test "does not send confirmation token if user is confirmed", %{conn: conn, user: user} do
       Repo.update!(Accounts.User.confirm_changeset(user))
 
@@ -49,6 +50,7 @@ defmodule SlinkWeb.UserConfirmationInstructionsLiveTest do
       refute Repo.get_by(Accounts.UserToken, user_id: user.id)
     end
 
+    @tag :capture_log
     test "does not send confirmation token if email is invalid", %{conn: conn} do
       {:ok, lv, _html} = live(conn, ~p"/users/confirm")
 

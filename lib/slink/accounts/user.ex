@@ -50,13 +50,26 @@ defmodule Slink.Accounts.User do
     |> maybe_validate_unique_email(opts)
   end
 
+  # defp validate_password(changeset, opts) do
+  #   changeset
+  #   |> validate_required([:password])
+  #   |> validate_length(:password, min: 12, max: 72)
+  #   # Examples of additional password validation:
+  #   # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
+  #   # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
+  #   # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
+  #   |> maybe_hash_password(opts)
+  # end
+
   defp validate_password(changeset, opts) do
-    min_len =
+    {min_len, max_len} =
       case opts[:min_len] do
         nil ->
           case Slink.build_env() do
-            :dev -> 4
-            _ -> 10
+            :dev -> {4, 72}
+            # raw generated min password-length
+            :test -> {12, 72}
+            _ -> {10, 50}
           end
 
         l when l > 0 ->
@@ -65,19 +78,25 @@ defmodule Slink.Accounts.User do
 
     changeset
     |> validate_required([:password])
-    |> validate_length(:password, min: min_len, max: 50)
-    |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character: a ~ z")
+    |> validate_length(:password, min: min_len, max: max_len)
     |> then(fn cs ->
       case Slink.build_env() do
         :dev ->
           cs
 
+        :test ->
+          cs
+
         _ ->
           cs
+          |> validate_format(:password, ~r/[a-z]/,
+            message: "at least one lower case character: a ~ z"
+          )
           |> validate_format(:password, ~r/[A-Z]/,
             message: "at least one upper case character: A ~ Z"
           )
           |> validate_format(:password, ~r/[0-9]/, message: "at least one digit character: 0 ~ 9")
+          # Strength check
           |> validate_format(:password, ~r/[!?@#$%^&*_]/,
             message: "at least one punctuation character: [!?@#$%^&*_]"
           )

@@ -1,5 +1,6 @@
 defmodule SlinkWeb.UserSettingsLive do
   use SlinkWeb, :live_view
+  require Logger
 
   alias Slink.Accounts
 
@@ -73,7 +74,7 @@ defmodule SlinkWeb.UserSettingsLive do
     """
   end
 
-  def mount(%{"token" => token}, _session, socket) do
+  def mount(%{"token" => token} = _params, _session, socket) do
     socket =
       case Accounts.update_user_email(socket.assigns.current_user, token) do
         :ok ->

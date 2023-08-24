@@ -1,5 +1,6 @@
 defmodule SlinkWeb.UserAuth do
   use SlinkWeb, :verified_routes
+  require Logger
 
   import Plug.Conn
   import Phoenix.Controller
@@ -70,7 +71,7 @@ defmodule SlinkWeb.UserAuth do
 
   It clears all session data for safety. See renew_session.
   """
-  def log_out_user(conn) do
+  def log_out_user(conn, return_to \\ ~p"/") do
     user_token = get_session(conn, :user_token)
     user_token && Accounts.delete_user_session_token(user_token)
 
@@ -78,10 +79,12 @@ defmodule SlinkWeb.UserAuth do
       SlinkWeb.Endpoint.broadcast(live_socket_id, "disconnect", %{})
     end
 
+    user_return_to = get_session(conn, :user_return_to)
+
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: ~p"/")
+    |> redirect(to: user_return_to || return_to)
   end
 
   @doc """
@@ -96,11 +99,19 @@ defmodule SlinkWeb.UserAuth do
 
   defp ensure_user_token(conn) do
     if token = get_session(conn, :user_token) do
+      Logger.debug(
+        "==use session token: #{token |> Base.encode16()} url-encode64: #{token |> Base.url_encode64()} raw: #{token |> inspect}"
+      )
+
       {token, conn}
     else
       conn = fetch_cookies(conn, signed: [@remember_me_cookie])
 
       if token = conn.cookies[@remember_me_cookie] do
+        Logger.info(
+          "==use remember-me cookie to restore token: #{token |> Base.encode16()} url-encode64: #{token |> Base.url_encode64()} raw: #{token |> inspect}"
+        )
+
         {token, put_token_in_session(conn, token)}
       else
         {nil, conn}
@@ -212,6 +223,10 @@ defmodule SlinkWeb.UserAuth do
   end
 
   defp put_token_in_session(conn, token) do
+    Logger.debug(
+      "put user-token session: #{token |> Base.encode16()} url-encode64: #{Base.url_encode64(token)} raw: #{token |> inspect}"
+    )
+
     conn
     |> put_session(:user_token, token)
     |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")

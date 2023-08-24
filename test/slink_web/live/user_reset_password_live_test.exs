@@ -52,12 +52,14 @@ defmodule SlinkWeb.UserResetPasswordLiveTest do
     test "resets password once", %{conn: conn, token: token, user: user} do
       {:ok, lv, _html} = live(conn, ~p"/users/reset_password/#{token}")
 
+      passwd = "new-valid-passwordA1!"
+
       {:ok, conn} =
         lv
         |> form("#reset_password_form",
           user: %{
-            "password" => "new valid password",
-            "password_confirmation" => "new valid password"
+            "password" => passwd,
+            "password_confirmation" => passwd
           }
         )
         |> render_submit()
@@ -65,7 +67,15 @@ defmodule SlinkWeb.UserResetPasswordLiveTest do
 
       refute get_session(conn, :user_token)
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Password reset successfully"
-      assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
+      assert Accounts.get_user_by_email_and_password(user.email, passwd)
+
+      # reuse the used-token
+      assert {:error,
+              {:redirect,
+               %{
+                 flash: %{"error" => "Reset password link is invalid or it has expired."},
+                 to: "/"
+               }}} = live(conn, ~p"/users/reset_password/#{token}")
     end
 
     test "does not reset password on invalid data", %{conn: conn, token: token} do

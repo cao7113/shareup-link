@@ -1,11 +1,16 @@
 defmodule SlinkWeb.LinkLive.Index do
   use SlinkWeb, :live_view
+  require Logger
 
   alias Slink.Links
   alias Slink.Links.Link
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, session, socket) do
+    Logger.info(
+      "links-index mount with pid: #{self() |> inspect} session: #{session |> inspect} socket: #{socket |> inspect} params: #{params |> inspect}"
+    )
+
     {:ok, stream(socket, :links, Links.list_links())}
   end
 

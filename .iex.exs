@@ -7,5 +7,8 @@ alias Slink.Links.Link
 alias Slink.Accounts
 alias Slink.Accounts.User
 
-# Crypto
+## Helpers
+alias ProcessHelper, as: Ph
+
+## Crypto
 alias Plug.Crypto

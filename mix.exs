@@ -61,7 +61,7 @@ defmodule Slink.MixProject do
       # app related
       {:endon, "~> 1.0"},
       {:timex, "~> 3.0"},
-      # admin
+      # admin https://github.com/aesmail/kaffy
       {:phoenix_view, "~> 2.0.2"},
       {:kaffy, "~> 0.9.2"}
     ]

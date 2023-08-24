@@ -15,4 +15,20 @@ defmodule Slink.Accounts.UserTokenAdmin do
       inserted_at: nil
     ]
   end
+
+  def list_actions(_conn) do
+    [
+      delete_all: %{
+        name: "Delete All",
+        action: fn _conn, users ->
+          users
+          |> Enum.map(& &1.id)
+          |> Slink.Accounts.tokens_query_from_ids()
+          |> Slink.Repo.delete_all()
+
+          :ok
+        end
+      }
+    ]
+  end
 end

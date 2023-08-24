@@ -1,9 +1,8 @@
 defmodule Slink.AccountsTest do
   use Slink.DataCase
 
-  alias Slink.Accounts
-
   import Slink.AccountsFixtures
+  alias Slink.Accounts
   alias Slink.Accounts.{User, UserToken}
 
   describe "get_user_by_email/1" do

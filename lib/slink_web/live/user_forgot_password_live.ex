@@ -1,5 +1,6 @@
 defmodule SlinkWeb.UserForgotPasswordLive do
   use SlinkWeb, :live_view
+  require Logger
 
   alias Slink.Accounts
 
@@ -37,6 +38,8 @@ defmodule SlinkWeb.UserForgotPasswordLive do
         user,
         &url(~p"/users/reset_password/#{&1}")
       )
+    else
+      Logger.warn("non-user attempt reset-password for email: #{email}")
     end
 
     info =

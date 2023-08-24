@@ -3,9 +3,9 @@ defmodule Slink.Accounts do
   The Accounts context.
   """
 
+  require Logger
   import Ecto.Query, warn: false
   alias Slink.Repo
-
   alias Slink.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
@@ -21,6 +21,9 @@ defmodule Slink.Accounts do
   end
 
   def get_user!(id), do: Repo.get!(User, id)
+
+  def users_query_from_ids(ids) when is_list(ids), do: from(u in User, where: u.id in ^ids)
+  def tokens_query_from_ids(ids) when is_list(ids), do: from(u in UserToken, where: u.id in ^ids)
 
   ## User registration
 
@@ -218,6 +221,10 @@ defmodule Slink.Accounts do
   def deliver_user_confirmation_instructions(%User{} = user, confirmation_url_fun)
       when is_function(confirmation_url_fun, 1) do
     if user.confirmed_at do
+      Logger.warn(
+        "skip confirmation-link-email-sending, email: #{user.email} already confirmed at: #{user.confirmed_at}"
+      )
+
       {:error, :already_confirmed}
     else
       {encoded_token, user_token} = UserToken.build_email_token(user, "confirm")

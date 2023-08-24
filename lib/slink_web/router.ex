@@ -21,12 +21,14 @@ defmodule SlinkWeb.Router do
 
     live("/", LinkLive.Index, :index)
 
-    # get "/", PageController, :index
     get("/welcome", PageController, :home)
+    get "/page", PageController, :index
     get("/plain-page", PageController, :plain)
 
     # normal words with controller
     resources("/words", WordController)
+
+    get("/test-redirect-to-live", LinkController, :test_to_live)
 
     # Living
     live "/test-live", TestLive, :test
@@ -106,6 +108,8 @@ defmodule SlinkWeb.Router do
       live("/users/confirm", UserConfirmationInstructionsLive, :new)
     end
   end
+
+  ## Kaffy Admin routes
 
   # use Kaffy.Routes, scope: "/admin", pipe_through: [:some_plug, :authenticate]
   use Kaffy.Routes, scope: "/admin", pipe_through: []

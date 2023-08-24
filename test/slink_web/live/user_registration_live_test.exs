@@ -32,7 +32,7 @@ defmodule SlinkWeb.UserRegistrationLiveTest do
 
       assert result =~ "Register"
       assert result =~ "must have the @ sign and no spaces"
-      assert result =~ "should be at least 10 character"
+      assert result =~ "should be at least 12 character"
     end
   end
 

@@ -6,6 +6,11 @@ defmodule SlinkWeb.LinkController do
 
   action_fallback SlinkWeb.FallbackController
 
+  def test_to_live(conn, _params) do
+    Logger.info("session in plain controller: #{conn |> get_session() |> inspect}")
+    redirect(conn, to: ~p"/users/settings")
+  end
+
   def index(conn, _params) do
     links = Links.list_links()
     render(conn, :index, links: links)

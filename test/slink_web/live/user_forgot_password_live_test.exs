@@ -47,6 +47,7 @@ defmodule SlinkWeb.UserForgotPasswordLiveTest do
                "reset_password"
     end
 
+    @tag :capture_log
     test "does not send reset password token if email is invalid", %{conn: conn} do
       {:ok, lv, _html} = live(conn, ~p"/users/reset_password")
 
