@@ -1,7 +1,7 @@
 <.header>
   Listing Links
   <:actions>
-    <.link patch={~p"/links/new"}>
+    <.link :if={@current_user} patch={~p"/links/new"}>
       <.button>New Link</.button>
     </.link>
   </:actions>
@@ -12,6 +12,7 @@
   rows={@streams.links}
   row_click={fn {_id, link} -> JS.navigate(~p"/links/#{link}") end}
 >
+  <:col :let={{_id, link}} label="ID"><%= link.id %></:col>
   <:col :let={{_id, link}} label="Title"><%= link.title %></:col>
   <:col :let={{_id, link}} label="Url">
     <a href={link.url} class="hover:text-zinc-700">
@@ -33,6 +34,29 @@
     </.link>
   </:action>
 </.table>
+<div class="flex space-x-16 justify-center">
+  <%= if @meta.has_previous_page? do %>
+    <.link :if={@meta.has_previous_page?} patch={~p"/links?page=#{@meta.previous_page}"}>
+      Prev <%= @meta.previous_page %>
+    </.link>
+  <% else %>
+    <div>
+      Prev <%= @meta.previous_page %>
+    </div>
+  <% end %>
+
+  <div>Current Page <%= @meta.current_page %> / <%= @meta.total_pages %></div>
+
+  <%= if @meta.has_next_page? do %>
+    <.link :if={@meta.has_next_page?} patch={~p"/links?page=#{@meta.next_page}"}>
+      Next <%= @meta.next_page %>
+    </.link>
+  <% else %>
+    <div>
+      Next <%= @meta.next_page %>
+    </div>
+  <% end %>
+</div>
 
 <.modal :if={@live_action in [:new, :edit]} id="link-modal" show on_cancel={JS.patch(~p"/links")}>
   <.live_component

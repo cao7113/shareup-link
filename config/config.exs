@@ -13,6 +13,9 @@ config :slink,
 config :endon,
   repo: Slink.Repo
 
+config :flop,
+  repo: Slink.Repo
+
 # Configures the endpoint
 config :slink, SlinkWeb.Endpoint,
   url: [host: "localhost"],

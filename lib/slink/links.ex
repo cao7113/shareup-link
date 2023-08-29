@@ -45,22 +45,23 @@ defmodule Slink.Links do
     )
   end
 
-  @doc """
-  Returns the list of links.
-
-  ## Examples
-
-      iex> list_links()
-      [%Link{}, ...]
-
-  """
   def list_links(opts \\ []) do
-    limit = opts[:limit] || 100
+    limit = opts[:limit] || 10
 
     Link
     |> order_by(desc: :id)
     |> limit(^limit)
     |> Repo.all()
+  end
+
+  def paging_links(params \\ %{}) do
+    # params = params
+    # |> Map.put_new("page_size", 5)
+
+    # |> Map.put_new("order_by", ["id"])
+    # "order_by" => ["name", "age"], "limit" => 5
+
+    Flop.validate_and_run(Link, params, for: Link)
   end
 
   @doc """

@@ -6,17 +6,21 @@ defmodule SlinkWeb.LinkLive.Index do
   alias Slink.Links.Link
 
   @impl true
-  def mount(params, session, socket) do
-    Logger.info(
-      "links-index mount with pid: #{self() |> inspect} session: #{session |> inspect} socket: #{socket |> inspect} params: #{params |> inspect}"
-    )
-
-    {:ok, stream(socket, :links, Links.list_links())}
+  def mount(_params, _session, socket) do
+    {:ok, stream(socket, :links, [])}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    {:ok, {links, meta}} = Links.paging_links(params)
+
+    sock =
+      socket
+      |> assign(:meta, meta)
+      |> apply_action(socket.assigns.live_action, params)
+      |> stream(:links, links, reset: true)
+
+    {:noreply, sock}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -39,7 +43,12 @@ defmodule SlinkWeb.LinkLive.Index do
 
   @impl true
   def handle_info({SlinkWeb.LinkLive.FormComponent, {:saved, link}}, socket) do
-    {:noreply, stream_insert(socket, :links, link)}
+    new_sock =
+      socket
+      |> put_flash(:info, "save link-#{link.id} ok")
+      |> push_patch(to: ~p"/links")
+
+    {:noreply, new_sock}
   end
 
   @impl true
@@ -47,6 +56,15 @@ defmodule SlinkWeb.LinkLive.Index do
     link = Links.get_link!(id)
     {:ok, _} = Links.delete_link(link)
 
-    {:noreply, stream_delete(socket, :links, link)}
+    new_sock =
+      socket
+      |> put_flash(:info, "delete link-#{id} ok")
+      |> push_patch(to: ~p"/links")
+
+    {:noreply, new_sock}
+  end
+
+  def get_links() do
+    Links.list_links()
   end
 end

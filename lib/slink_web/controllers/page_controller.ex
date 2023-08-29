@@ -13,9 +13,16 @@ defmodule SlinkWeb.PageController do
 
   def plain(conn, _params) do
     conn
-    |> put_root_layout(html: :root_bare)
-    |> put_layout(html: :app_bare)
-    # |> put_layout(false)
+    |> put_root_layout(html: :bare_root)
+    |> put_layout(html: :bare_app)
     |> render(:plain)
+  end
+
+  def tailwind(conn, _params) do
+    conn
+    # |> put_root_layout(false)
+    |> put_root_layout(html: :bare_root)
+    |> put_layout(false)
+    |> render(:tailwind)
   end
 end

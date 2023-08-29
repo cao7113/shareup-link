@@ -19,27 +19,31 @@ defmodule SlinkWeb.Router do
   scope "/", SlinkWeb do
     pipe_through(:browser)
 
-    live("/", LinkLive.Index, :index)
-
-    get("/welcome", PageController, :home)
-    get "/page", PageController, :index
-    get("/plain-page", PageController, :plain)
-
-    # normal words with controller
+    # Regular Controller
     resources("/words", WordController)
-
     get("/test-redirect-to-live", LinkController, :test_to_live)
 
-    # Living
+    # LiveView
     live "/test-live", TestLive, :test
     live "/test-form-live", TestFormLive, :test
 
-    # links live
-    live("/links", LinkLive.Index, :index)
-    live("/links/new", LinkLive.Index, :new)
-    live("/links/:id/edit", LinkLive.Index, :edit)
-    live("/links/:id", LinkLive.Show, :show)
-    live("/links/:id/show/edit", LinkLive.Show, :edit)
+    live_session :links_live,
+      on_mount: [{SlinkWeb.UserAuth, :mount_current_user}] do
+      live("/", LinkLive.Index, :index)
+
+      # links live
+      live("/links", LinkLive.Index, :index)
+      live("/links/new", LinkLive.Index, :new)
+      live("/links/:id/edit", LinkLive.Index, :edit)
+      live("/links/:id", LinkLive.Show, :show)
+      live("/links/:id/show/edit", LinkLive.Show, :edit)
+    end
+
+    ## Page Controller
+    get("/welcome", PageController, :home)
+    get "/page", PageController, :index
+    get("/plain-page", PageController, :plain)
+    get("/tailwind", PageController, :tailwind)
   end
 
   ############################################################
