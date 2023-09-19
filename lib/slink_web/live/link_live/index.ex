@@ -63,8 +63,4 @@ defmodule SlinkWeb.LinkLive.Index do
 
     {:noreply, new_sock}
   end
-
-  def get_links() do
-    Links.list_links()
-  end
 end

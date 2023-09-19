@@ -34,7 +34,7 @@ defmodule SlinkWeb.LinkController do
       "handling #{submit_cnt} links: #{links_params |> inspect(printable_limit: 100)} in batch"
     )
 
-    {real_import_cnt, _} = Links.batch_submit(links_params)
+    {real_import_cnt, _} = Links.create_links(links_params)
 
     if real_import_cnt != submit_cnt do
       Logger.warn("final import #{real_import_cnt} vs #{submit_cnt}(attempt) links")

@@ -2,7 +2,7 @@
   Link <%= @link.id %>
   <:subtitle>This is a link record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/links/#{@link}/show/edit"} phx-click={JS.push_focus()}>
+    <.link :if={@current_user} patch={~p"/links/#{@link}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit link</.button>
     </.link>
   </:actions>

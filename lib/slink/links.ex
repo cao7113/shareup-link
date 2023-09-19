@@ -10,41 +10,6 @@ defmodule Slink.Links do
 
   @permit_link_keys [:title, :url]
 
-  @doc """
-  submit batch links params from user
-  """
-  def batch_submit(links_params) when is_list(links_params) do
-    links_params
-    |> Enum.map(fn it ->
-      it
-      |> MapHelper.cast_plain_params(@permit_link_keys)
-      |> Map.update!(:url, fn url ->
-        len = String.length(url)
-
-        if len > 400 do
-          Logger.warn("url too long. (#{len} > 400) url: #{url}")
-          String.slice(url, 0..399)
-        else
-          url
-        end
-      end)
-      |> Map.update!(:title, fn title ->
-        len = String.length(title)
-
-        if len > 200 do
-          Logger.warn("url too long. (#{len} > 200) url: #{title}")
-          String.slice(title, 0..199)
-        else
-          title
-        end
-      end)
-    end)
-    |> RepoHelper.batch_import(Repo, Link,
-      on_conflict: :nothing,
-      conflict_target: [:url]
-    )
-  end
-
   def list_links(opts \\ []) do
     limit = opts[:limit] || 10
 
@@ -96,6 +61,43 @@ defmodule Slink.Links do
     %Link{}
     |> Link.changeset(attrs)
     |> Repo.insert()
+
+    # todo 转化成下面的函数
+  end
+
+  @doc """
+  submit batch links params from user
+  """
+  def create_links(links_params) when is_list(links_params) do
+    links_params
+    |> Enum.map(fn it ->
+      it
+      |> MapHelper.cast_plain_params(@permit_link_keys)
+      |> Map.update!(:url, fn url ->
+        len = String.length(url)
+
+        if len > 400 do
+          Logger.warn("url too long. (#{len} > 400) url: #{url}")
+          String.slice(url, 0..399)
+        else
+          url
+        end
+      end)
+      |> Map.update!(:title, fn title ->
+        len = String.length(title)
+
+        if len > 200 do
+          Logger.warn("url too long. (#{len} > 200) url: #{title}")
+          String.slice(title, 0..199)
+        else
+          title
+        end
+      end)
+    end)
+    |> RepoHelper.batch_import(Repo, Link,
+      on_conflict: :nothing,
+      conflict_target: [:url]
+    )
   end
 
   @doc """

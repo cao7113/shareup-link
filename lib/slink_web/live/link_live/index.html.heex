@@ -7,26 +7,32 @@
   </:actions>
 </.header>
 
-<.table
-  id="links"
-  rows={@streams.links}
-  row_click={fn {_id, link} -> JS.navigate(~p"/links/#{link}") end}
->
-  <:col :let={{_id, link}} label="ID"><%= link.id %></:col>
-  <:col :let={{_id, link}} label="Title"><%= link.title %></:col>
-  <:col :let={{_id, link}} label="Url">
-    <a href={link.url} class="hover:text-zinc-700">
-      <%= link.url |> String.slice(0..80) %>
-    </a>
+<.table id="links" rows={@streams.links}>
+  <:col :let={{_id, link}} label="">
+    <.link navigate={~p"/links/#{link}"}>
+      <span class="text-base">#</span><%= link.id %>
+    </.link>
   </:col>
+
+  <:col :let={{_id, link}} label="">
+    <.link href={link.url}>
+      <.header>
+        <%= link.title |> String.slice(0..80) %>
+        <:subtitle>
+          <%= link.url |> String.slice(0..30) %>
+        </:subtitle>
+      </.header>
+    </.link>
+  </:col>
+
   <:action :let={{_id, link}}>
-    <div class="sr-only">
-      <.link navigate={~p"/links/#{link}"}>Show</.link>
-    </div>
-    <.link patch={~p"/links/#{link}/edit"}>Edit</.link>
+    <.link navigate={~p"/links/#{link}"}>Show</.link>
+    <.link :if={@current_user} patch={~p"/links/#{link}/edit"}>Edit</.link>
   </:action>
+
   <:action :let={{id, link}}>
     <.link
+      :if={@current_user}
       phx-click={JS.push("delete", value: %{id: link.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
     >
@@ -34,6 +40,7 @@
     </.link>
   </:action>
 </.table>
+
 <div class="flex space-x-16 justify-center">
   <%= if @meta.has_previous_page? do %>
     <.link :if={@meta.has_previous_page?} patch={~p"/links?page=#{@meta.previous_page}"}>
