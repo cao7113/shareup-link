@@ -7,18 +7,20 @@
       <a href={~p"/links"} class="hover:underline hover:text-zinc-700">
         Links
       </a>
-      <a href={~p"/tailwind"} class="hover:text-zinc-700">
-        Tailwind Page
-      </a>
-      <a href="/dev/mailbox" class="hover:text-zinc-700" target="_blank">
-        MailBox
-      </a>
-      <a href={~p"/admin"} class="hover:text-zinc-700" target="_blank">
-        Admin
-      </a>
-      <a href={~p"/admin/accounts/user"} class="hover:text-zinc-700" target="_blank">
-        UserAdmin
-      </a>
+      <%= if Slink.env_dev? || (@current_user and @current_user == "cao7113@hotmail.com") do %>
+        <a href={~p"/tailwind"} class="hover:text-zinc-700">
+          Tailwind Page
+        </a>
+        <a href="/dev/mailbox" class="hover:text-zinc-700" target="_blank">
+          MailBox
+        </a>
+        <a href={~p"/admin"} class="hover:text-zinc-700" target="_blank">
+          Admin
+        </a>
+        <a href={~p"/admin/accounts/user"} class="hover:text-zinc-700" target="_blank">
+          UserAdmin
+        </a>
+      <% end %>
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
       <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">

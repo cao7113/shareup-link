@@ -15,6 +15,8 @@ defmodule Slink do
 
   def assert_dev!, do: assert_env!([:dev])
 
+  def env_dev?, do: build_env() == :dev
+
   def assert_env!(target_envs, env \\ build_env()) when is_list(target_envs) do
     unless env in target_envs do
       raise "current env(#{env}) not in targets: #{target_envs |> inspect}"
