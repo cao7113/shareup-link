@@ -5,13 +5,13 @@ defmodule Slink.Links.LinkAdmin do
       title: %{
         name: "Title",
         value: fn it ->
-          it.title |> String.slice(0..20)
+          it.title |> String.slice(0..25)
         end
       },
-      title: %{
+      url: %{
         name: "URL",
         value: fn it ->
-          it.url |> String.slice(0..20)
+          it.url |> String.slice(0..40)
         end
       },
       inserted_at: nil,
