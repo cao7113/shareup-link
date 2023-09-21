@@ -10,16 +10,23 @@
 <.table id="links" rows={@streams.links}>
   <:col :let={{_id, link}} label="">
     <.link navigate={~p"/links/#{link}"}>
-      <span class="text-base">#</span><%= link.id %>
+      <.header>
+        <span class="text-base">#</span><%= link.id %>
+        <:subtitle>
+          <span class="text-sm">
+            <%= link.updated_at |> NaiveDateTime.to_string() |> String.slice(5..15) %>
+          </span>
+        </:subtitle>
+      </.header>
     </.link>
   </:col>
 
   <:col :let={{_id, link}} label="">
     <.link href={link.url}>
       <.header>
-        <%= link.title |> String.slice(0..80) %>
+        <%= link.title |> String.slice(0..60) %>
         <:subtitle>
-          <%= link.url |> String.slice(0..30) %>
+          <%= link.url |> String.slice(0..60) %>
         </:subtitle>
       </.header>
     </.link>
@@ -27,6 +34,9 @@
 
   <:action :let={{_id, link}}>
     <.link navigate={~p"/links/#{link}"}>Show</.link>
+  </:action>
+
+  <:action :let={{_id, link}}>
     <.link :if={@current_user} patch={~p"/links/#{link}/edit"}>Edit</.link>
   </:action>
 

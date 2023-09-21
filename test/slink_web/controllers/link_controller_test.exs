@@ -20,8 +20,13 @@ defmodule SlinkWeb.LinkControllerTest do
 
   describe "index" do
     test "lists all links", %{conn: conn} do
+      insert_list(2, :link)
       conn = get(conn, ~p"/api/links")
-      assert json_response(conn, 200)["data"] == []
+
+      resp = json_response(conn, 200)
+      # |> IO.inspect(label: "links resp")
+
+      assert resp["data"] |> length == 2
     end
   end
 
@@ -80,9 +85,9 @@ defmodule SlinkWeb.LinkControllerTest do
       conn = delete(conn, ~p"/api/links/#{link}")
       assert response(conn, 204)
 
-      assert_error_sent 404, fn ->
+      assert_error_sent(404, fn ->
         get(conn, ~p"/api/links/#{link}")
-      end
+      end)
     end
   end
 

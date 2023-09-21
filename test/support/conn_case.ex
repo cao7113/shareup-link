@@ -28,6 +28,8 @@ defmodule SlinkWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import SlinkWeb.ConnCase
+
+      import Slink.Factory
     end
   end
 

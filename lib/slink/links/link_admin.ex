@@ -18,4 +18,20 @@ defmodule Slink.Links.LinkAdmin do
       updated_at: nil
     ]
   end
+
+  def list_actions(_conn) do
+    [
+      delete_all: %{
+        name: "Delete All",
+        action: fn _conn, items ->
+          items
+          |> Enum.map(& &1.id)
+          |> Slink.Links.query_from_ids()
+          |> Slink.Repo.delete_all()
+
+          :ok
+        end
+      }
+    ]
+  end
 end

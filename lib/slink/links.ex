@@ -8,8 +8,6 @@ defmodule Slink.Links do
   alias Slink.Repo
   alias Slink.Links.Link
 
-  @permit_link_keys [:title, :url]
-
   def list_links(opts \\ []) do
     limit = opts[:limit] || 10
 
@@ -19,15 +17,17 @@ defmodule Slink.Links do
     |> Repo.all()
   end
 
-  def paging_links(params \\ %{}) do
-    # params = params
-    # |> Map.put_new("page_size", 5)
-
-    # |> Map.put_new("order_by", ["id"])
-    # "order_by" => ["name", "age"], "limit" => 5
-
+  def paging_links(params \\ %{}) when is_map(params) do
     Flop.validate_and_run(Link, params, for: Link)
   end
+
+  def paging_links2(opts \\ []) when is_list(opts) do
+    opts
+    |> Map.new()
+    |> paging_links()
+  end
+
+  def query_from_ids(ids) when is_list(ids), do: from(l in Link, where: l.id in ^ids)
 
   @doc """
   Gets a single link.
@@ -61,43 +61,39 @@ defmodule Slink.Links do
     %Link{}
     |> Link.changeset(attrs)
     |> Repo.insert()
-
-    # todo 转化成下面的函数
   end
 
   @doc """
-  submit batch links params from user
+  Submit batch links params from user
   """
   def create_links(links_params) when is_list(links_params) do
     links_params
-    |> Enum.map(fn it ->
-      it
-      |> MapHelper.cast_plain_params(@permit_link_keys)
-      |> Map.update!(:url, fn url ->
-        len = String.length(url)
+    |> Enum.reduce_while([], fn params, acc ->
+      Link.changeset(%Link{}, params)
+      |> case do
+        %{valid?: true, changes: changes} ->
+          {:cont, [changes | acc]}
 
-        if len > 400 do
-          Logger.warn("url too long. (#{len} > 400) url: #{url}")
-          String.slice(url, 0..399)
-        else
-          url
-        end
-      end)
-      |> Map.update!(:title, fn title ->
-        len = String.length(title)
-
-        if len > 200 do
-          Logger.warn("url too long. (#{len} > 200) url: #{title}")
-          String.slice(title, 0..199)
-        else
-          title
-        end
-      end)
+        %{errors: errors} = cs ->
+          Logger.warn("cast failed: #{errors |> inspect} for link params: #{params |> inspect}")
+          {:halt, {:error, cs}}
+      end
     end)
-    |> RepoHelper.batch_import(Repo, Link,
-      on_conflict: :nothing,
-      conflict_target: [:url]
-    )
+    |> case do
+      {:error, _} = err ->
+        err
+
+      items ->
+        {cnt, _} =
+          items
+          |> Enum.reverse()
+          |> RepoHelper.batch_import(Repo, Link,
+            on_conflict: :nothing,
+            conflict_target: [:url]
+          )
+
+        {:ok, cnt}
+    end
   end
 
   @doc """

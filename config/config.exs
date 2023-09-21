@@ -10,11 +10,8 @@ import Config
 config :slink,
   ecto_repos: [Slink.Repo]
 
-config :endon,
-  repo: Slink.Repo
-
-config :flop,
-  repo: Slink.Repo
+config :endon, repo: Slink.Repo
+config :flop, repo: Slink.Repo
 
 # Configures the endpoint
 config :slink, SlinkWeb.Endpoint,

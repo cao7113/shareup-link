@@ -4,8 +4,11 @@ defmodule SlinkWeb.LinkJSON do
   @doc """
   Renders a list of links.
   """
-  def index(%{links: links}) do
-    %{data: for(link <- links, do: data(link))}
+  def index(%{links: links, meta: meta}) do
+    %{
+      data: for(link <- links, do: data(link)),
+      meta: meta
+    }
   end
 
   @doc """
@@ -19,7 +22,9 @@ defmodule SlinkWeb.LinkJSON do
     %{
       id: link.id,
       title: link.title,
-      url: link.url
+      url: link.url,
+      inserted_at: link.inserted_at,
+      updated_at: link.updated_at
     }
   end
 end

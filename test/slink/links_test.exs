@@ -44,6 +44,15 @@ defmodule Slink.LinksTest do
       assert {:error, %Ecto.Changeset{}} = Links.create_link(@invalid_attrs)
     end
 
+    @tag :manual
+    test "create_links" do
+      [
+        params_for(:link),
+        params_for(:link)
+      ]
+      |> Links.create_links()
+    end
+
     test "update_link/2 with valid data updates the link" do
       link = link_fixture()
       update_attrs = %{title: "some updated title", url: "some updated url"}

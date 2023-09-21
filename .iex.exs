@@ -4,6 +4,7 @@ alias Ecto.Changeset
 import Slink.Factory
 
 alias Slink.Repo
+alias Slink.Links
 alias Slink.Links.Link
 
 alias Slink.Accounts

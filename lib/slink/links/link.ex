@@ -6,9 +6,10 @@ defmodule Slink.Links.Link do
   @derive {
     Flop.Schema,
     filterable: [:title, :url],
-    sortable: [:id],
-    max_limit: 25,
-    default_limit: 8,
+    sortable: [:id, :updated_at],
+    max_limit: 200,
+    default_limit: 10,
+    pagination_types: [:page],
     default_order: %{
       order_by: [:id],
       order_directions: [:desc]
@@ -23,7 +24,7 @@ defmodule Slink.Links.Link do
   end
 
   @doc false
-  def changeset(link, attrs) do
+  def changeset(link, attrs \\ %{}) do
     link
     |> cast(attrs, [:title, :url])
     |> validate_required([:title, :url])

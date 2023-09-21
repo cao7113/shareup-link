@@ -67,8 +67,8 @@ defmodule Slink.MixProject do
       # {:faker, "~> 0.17", only: [:test, :dev]},
       {:faker, "~> 0.17"},
       {:ex_machina, "~> 2.7.0"},
-      # pagination
-      {:flop, "~> 0.22.1"}
+      {:flop, "~> 0.22.1"},
+      {:req, "~> 0.4.0"}
     ]
   end
 

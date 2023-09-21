@@ -11,9 +11,10 @@ defmodule SlinkWeb.LinkController do
     redirect(conn, to: ~p"/users/settings")
   end
 
-  def index(conn, _params) do
-    links = Links.list_links()
-    render(conn, :index, links: links)
+  def index(conn, params) do
+    with {:ok, {links, meta}} <- Flop.validate_and_run(Link, params, for: Link) do
+      render(conn, :index, links: links, meta: meta)
+    end
   end
 
   def create(conn, %{"link" => link_params}) do
@@ -34,7 +35,7 @@ defmodule SlinkWeb.LinkController do
       "handling #{submit_cnt} links: #{links_params |> inspect(printable_limit: 100)} in batch"
     )
 
-    {real_import_cnt, _} = Links.create_links(links_params)
+    {:ok, real_import_cnt} = Links.create_links(links_params)
 
     if real_import_cnt != submit_cnt do
       Logger.warn("final import #{real_import_cnt} vs #{submit_cnt}(attempt) links")

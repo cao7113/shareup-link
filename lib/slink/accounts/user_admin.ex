@@ -22,23 +22,6 @@ defmodule Slink.Accounts.UserAdmin do
           :ok
         end
       }
-      # change_price: %{
-      #   name: "Change price",
-      #   inputs: [
-      #     %{name: "new_price", title: "New Price", default: "3"}
-      #   ],
-      #   action: fn _conn, users, params ->
-      #     new_price = Map.get(params, "new_price") |> Decimal.new()
-
-      #     Enum.map(users, fn u ->
-      #       Ecto.Changeset.change(u, %{price: new_price})
-      #       |> Slink.Repo.update()
-      #     end)
-
-      #     :ok
-      #   end
-      # }
-      # not_good: %{name: "Error me out", action: fn _, _ -> {:error, "Expected error"} end}
     ]
   end
 

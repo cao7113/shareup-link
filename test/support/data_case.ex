@@ -24,6 +24,8 @@ defmodule Slink.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Slink.DataCase
+
+      import Slink.Factory
     end
   end
 
