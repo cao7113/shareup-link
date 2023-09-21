@@ -4,6 +4,7 @@ defmodule Slink.Accounts.UserAdmin do
       id: nil,
       email: nil,
       confirmed_at: nil,
+      admin_role: nil,
       inserted_at: nil,
       updated_at: nil
     ]

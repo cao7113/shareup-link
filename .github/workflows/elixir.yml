@@ -1,0 +1,64 @@
+name: Elixir CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      # https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md#postgresql
+      # https://www.cybertec-postgresql.com/en/postgresql-github-actions-continuous-integration/
+      - name: "Start pre-installed PostgreSQL 14 service with user: postgres"
+        run: |
+          sudo systemctl start postgresql.service
+          pg_isready
+      - name: Create ci-db-user
+        run: |
+          psql --version
+          sudo -u postgres psql --command="CREATE USER ciuser WITH PASSWORD 'ciuser123' CREATEDB" --command="\du" --command="\l"
+      - name: Create app database
+        run: |
+          sudo -u postgres createdb --owner=ciuser slink_test
+          PGPASSWORD=ciuser123 psql --username=ciuser --host=localhost --list slink_test
+
+      - uses: actions/checkout@v3
+      # https://github.com/erlef/setup-beam
+      - name: Set up Elixir
+        #uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@v1.15.2
+        with:
+          version-type: "strict"
+          version-file: ".tool-versions"
+      - name: Check elixir version
+        run: |
+          elixir --version
+          erl -version
+      - name: Restore dependencies cache
+        uses: actions/cache@v3
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+      - name: Install dependencies
+        run: mix deps.get --only test
+
+      # - name: Setup tmate session to debug actions
+      #   uses: mxschmitt/action-tmate@v3
+
+      - name: Run tests
+        run: |
+          mix test
+        env:
+          DB_USER: "ciuser"
+          DB_PASSWORD: "ciuser123"

@@ -3,8 +3,20 @@ defmodule Remote do
   Remote resource request client
   """
 
-  def fetch_links(params \\ %{}, opts \\ []) do
+  def fetch_links(opts \\ []) do
     url = opts[:url] || get_links_url(opts[:remote])
+
+    params =
+      case opts[:params] do
+        nil ->
+          opts
+          |> Keyword.take([:page, :page_size])
+          |> Map.new()
+          |> Map.put_new(:page_size, 100)
+
+        params ->
+          params
+      end
 
     with {:ok, resp} <- Req.get(url: url, params: params) do
       resp.body["data"]

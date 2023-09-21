@@ -27,7 +27,8 @@ defmodule Slink.Links do
     |> paging_links()
   end
 
-  def query_from_ids(ids) when is_list(ids), do: from(l in Link, where: l.id in ^ids)
+  def query_from_ids(ids) when is_list(ids),
+    do: from(l in Link, where: l.id in ^ids)
 
   @doc """
   Gets a single link.

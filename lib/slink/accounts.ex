@@ -8,6 +8,17 @@ defmodule Slink.Accounts do
   alias Slink.Repo
   alias Slink.Accounts.{User, UserToken, UserNotifier}
 
+  ## Admin Mgnt
+
+  def make_admin(user, role \\ "admin") do
+    user
+    |> User.update(%{admin_role: role})
+  end
+
+  def is_admin?(nil), do: false
+  def is_admin?(%{admin_role: nil}), do: false
+  def is_admin?(%{admin_role: _role}), do: true
+
   ## Database getters
 
   def get_user_by_email(email) when is_binary(email) do
