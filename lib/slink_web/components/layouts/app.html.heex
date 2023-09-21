@@ -15,11 +15,11 @@
           MailBox
         </a>
       <% end %>
-      <%= if Slink.Accounts.is_admin?(@current_user) do %>
-        <a href={~p"/admin"} class="hover:text-zinc-700" target="_blank">
+      <%= if Slink.env_dev?() || Slink.Accounts.is_admin?(@current_user) do %>
+        <a href={~p"/admin"} class="hover:text-zinc-700">
           Admin
         </a>
-        <a href={~p"/admin/accounts/user"} class="hover:text-zinc-700" target="_blank">
+        <a href={~p"/admin/accounts/user"} class="hover:text-zinc-700">
           UserAdmin
         </a>
       <% end %>

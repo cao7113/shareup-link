@@ -63,7 +63,7 @@ defmodule Slink.MixProject do
       {:timex, "~> 3.0"},
       # admin https://github.com/aesmail/kaffy
       {:phoenix_view, "~> 2.0.2"},
-      {:kaffy, "~> 0.9.2"},
+      {:kaffy, "~> 0.10.0-rc.2"},
       # {:faker, "~> 0.17", only: [:test, :dev]},
       {:faker, "~> 0.17"},
       {:ex_machina, "~> 2.7.0"},

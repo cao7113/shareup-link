@@ -24,8 +24,8 @@ defmodule SlinkWeb.Router do
     get("/test-redirect-to-live", LinkController, :test_to_live)
 
     # LiveView
-    live "/test-live", TestLive, :test
-    live "/test-form-live", TestFormLive, :test
+    live("/test-live", TestLive, :test)
+    live("/test-form-live", TestFormLive, :test)
 
     live_session :links_live,
       on_mount: [{SlinkWeb.UserAuth, :mount_current_user}] do
@@ -41,7 +41,7 @@ defmodule SlinkWeb.Router do
 
     ## Page Controller
     get("/welcome", PageController, :home)
-    get "/page", PageController, :index
+    get("/page", PageController, :index)
     get("/plain-page", PageController, :plain)
     get("/tailwind", PageController, :tailwind)
   end
@@ -114,14 +114,18 @@ defmodule SlinkWeb.Router do
   end
 
   ## Kaffy Admin routes
+  use Kaffy.Routes,
+    scope: "/admin",
+    pipe_through: [
+      :fetch_current_user,
+      :require_authenticated_admin
+    ]
 
-  # use Kaffy.Routes, scope: "/admin", pipe_through: [:some_plug, :authenticate]
-  use Kaffy.Routes, scope: "/admin", pipe_through: []
-  # :scope defaults to "/admin"
   # :pipe_through defaults to kaffy's [:kaffy_browser]
   # when providing pipelines, they will be added after :kaffy_browser
   # so the actual pipe_through for the previous line is:
   # [:kaffy_browser, :some_plug, :authenticate]
+
   # pipeline :kaffy_browser do
   #   plug :accepts, ["html", "json"]
   #   plug :fetch_session
