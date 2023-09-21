@@ -18,6 +18,11 @@ defmodule SlinkWeb.PageController do
     |> render(:plain)
   end
 
+  def test(conn, _params) do
+    conn
+    |> render(:test)
+  end
+
   def tailwind(conn, _params) do
     conn
     # |> put_root_layout(false)

@@ -43,6 +43,7 @@ defmodule SlinkWeb.Router do
     get("/welcome", PageController, :home)
     get("/page", PageController, :index)
     get("/plain-page", PageController, :plain)
+    get("/test", PageController, :test)
     get("/tailwind", PageController, :tailwind)
   end
 

@@ -1,0 +1,8 @@
+<.flash_group flash={@flash} />
+
+<h1>Test Page</h1>
+
+<div> 
+UserAgent:
+<%= Plug.Conn.get_req_header(@conn, "user-agent")|>List.first %>
+</div>
