@@ -19,6 +19,7 @@ defmodule Slink.Links.Link do
   schema "links" do
     field(:title, :string)
     field(:url, :string)
+    field :site_id, :integer
 
     timestamps()
   end
@@ -26,7 +27,7 @@ defmodule Slink.Links.Link do
   @doc false
   def changeset(link, attrs \\ %{}) do
     link
-    |> cast(attrs, [:title, :url])
+    |> cast(attrs, [:title, :url, :site_id])
     |> validate_required([:title, :url])
     |> unique_constraint(:url)
   end

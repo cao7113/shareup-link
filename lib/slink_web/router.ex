@@ -27,7 +27,7 @@ defmodule SlinkWeb.Router do
     live("/test-live", TestLive, :test)
     live("/test-form-live", TestFormLive, :test)
 
-    live_session :links_live,
+    live_session :live,
       on_mount: [{SlinkWeb.UserAuth, :mount_current_user}] do
       live("/", LinkLive.Index, :index)
 
@@ -37,6 +37,12 @@ defmodule SlinkWeb.Router do
       live("/links/:id/edit", LinkLive.Index, :edit)
       live("/links/:id", LinkLive.Show, :show)
       live("/links/:id/show/edit", LinkLive.Show, :edit)
+
+      live("/tags", TagLive.Index, :index)
+      live("/tags/new", TagLive.Index, :new)
+      live("/tags/:id/edit", TagLive.Index, :edit)
+      live("/tags/:id", TagLive.Show, :show)
+      live("/tags/:id/show/edit", TagLive.Show, :edit)
     end
 
     ## Page Controller
@@ -126,7 +132,6 @@ defmodule SlinkWeb.Router do
   # when providing pipelines, they will be added after :kaffy_browser
   # so the actual pipe_through for the previous line is:
   # [:kaffy_browser, :some_plug, :authenticate]
-
   # pipeline :kaffy_browser do
   #   plug :accepts, ["html", "json"]
   #   plug :fetch_session

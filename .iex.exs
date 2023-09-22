@@ -6,6 +6,10 @@ import Slink.Factory
 alias Slink.Repo
 alias Slink.Links
 alias Slink.Links.Link
+alias Slink.Sites
+alias Slink.Sites.Site
+alias Slink.Tags
+alias Slink.Tags.Tag
 
 alias Slink.Accounts
 alias Slink.Accounts.User
