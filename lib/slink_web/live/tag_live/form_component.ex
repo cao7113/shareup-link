@@ -1,6 +1,5 @@
 defmodule SlinkWeb.TagLive.FormComponent do
   use SlinkWeb, :live_component
-
   alias Slink.Tags
 
   @impl true

@@ -3,6 +3,24 @@ defmodule Slink.TagsTest do
 
   alias Slink.Tags
 
+  describe "auto match" do
+    @tag :manual
+    test "ok" do
+      str = "
+      公安部：持续深化户籍制度改革 进一步放宽集体户设立条件_新闻频道_中国青年网
+      https://news.youth.cn/gn/202308/t20230803_14693492.htm"
+
+      words = ~w[户籍 公安部 youth] |> Enum.join("|")
+
+      matches =
+        Regex.scan(~r/(#{words})/i, str, capture: :all_but_first)
+        |> List.flatten()
+        |> Enum.uniq()
+
+      assert matches == ["公安部", "户籍", "youth"]
+    end
+  end
+
   describe "tags" do
     alias Slink.Tags.Tag
 

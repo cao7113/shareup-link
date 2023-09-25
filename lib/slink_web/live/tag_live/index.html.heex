@@ -1,7 +1,7 @@
 <.header>
   Listing Tags
   <:actions>
-    <.link patch={~p"/tags/new"}>
+    <.link :if={@current_user} patch={~p"/tags/new"}>
       <.button>New Tag</.button>
     </.link>
   </:actions>
@@ -12,15 +12,30 @@
   rows={@streams.tags}
   row_click={fn {_id, tag} -> JS.navigate(~p"/tags/#{tag}") end}
 >
+  <:col :let={{_id, tag}} label="ID"><%= tag.id %></:col>
   <:col :let={{_id, tag}} label="Name"><%= tag.name %></:col>
+  <:col :let={{_id, tag}} label="AutoMatchTouchAt">
+    <span><%= tag.auto_match_touch_at %></span>
+    <button class="bg-blue-500" phx-click="touch_auto_match" phx-value-id={tag.id}>
+      Touch AutoMatch
+    </button>
+  </:col>
+  <:col :let={{_id, tag}} label="PinTopTouchAt">
+    <span><%= tag.pin_top_touch_at %></span>
+    <button class="bg-blue-500" phx-click="touch_pin_top" phx-value-id={tag.id}>
+      Touch Pintop
+    </button>
+  </:col>
+
   <:action :let={{_id, tag}}>
     <div class="sr-only">
       <.link navigate={~p"/tags/#{tag}"}>Show</.link>
     </div>
-    <.link patch={~p"/tags/#{tag}/edit"}>Edit</.link>
+    <.link :if={@current_user} patch={~p"/tags/#{tag}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, tag}}>
     <.link
+      :if={@current_user}
       phx-click={JS.push("delete", value: %{id: tag.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
     >

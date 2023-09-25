@@ -8,6 +8,38 @@ defmodule Slink.Links do
   alias Slink.Repo
   alias Slink.Links.Link
 
+  def update_auto_tags(%Link{tags: tags} = link, opts \\ []) do
+    new_tags =
+      opts[:keep_raw_tags]
+      |> case do
+        nil ->
+          []
+
+        _ ->
+          tags
+      end
+      |> Kernel.++(auto_tags(link))
+      |> Enum.uniq()
+
+    Link.update(link, %{tags: new_tags})
+  end
+
+  def refresh_auto_tags!() do
+    Link
+    # |> where([l], l.tags == [])
+    |> from()
+    |> Link.stream_where()
+    |> Enum.map(fn l ->
+      update_auto_tags(l)
+    end)
+  end
+
+  def auto_tags(%{title: title, url: url}) do
+    [title, url]
+    |> Enum.join(" ")
+    |> Slink.Tags.auto_match_tags()
+  end
+
   def list_links(opts \\ []) do
     limit = opts[:limit] || 10
 
@@ -17,14 +49,14 @@ defmodule Slink.Links do
     |> Repo.all()
   end
 
-  def paging_links(params \\ %{}) when is_map(params) do
+  def page_links(params \\ %{}) when is_map(params) do
     Flop.validate_and_run(Link, params, for: Link)
   end
 
-  def paging_links2(opts \\ []) when is_list(opts) do
+  def page_links2(opts \\ []) when is_list(opts) do
     opts
     |> Map.new()
-    |> paging_links()
+    |> page_links()
   end
 
   def query_from_ids(ids) when is_list(ids),

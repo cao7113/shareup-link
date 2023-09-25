@@ -12,7 +12,7 @@ defmodule SlinkWeb.LinkLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:ok, {links, meta}} = Links.paging_links(params)
+    {:ok, {links, meta}} = Links.page_links(params)
 
     sock =
       socket
@@ -60,6 +60,16 @@ defmodule SlinkWeb.LinkLive.Index do
       socket
       |> put_flash(:info, "delete link-#{id} ok")
       |> push_patch(to: ~p"/links")
+
+    {:noreply, new_sock}
+  end
+
+  def handle_event("auto_match_tags", %{}, socket) do
+    Links.refresh_auto_tags!()
+
+    new_sock =
+      socket
+      |> put_flash(:info, "Refresh auto tags #{Timex.now()}")
 
     {:noreply, new_sock}
   end

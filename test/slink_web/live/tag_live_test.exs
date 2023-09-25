@@ -14,7 +14,7 @@ defmodule SlinkWeb.TagLiveTest do
   end
 
   describe "Index" do
-    setup [:create_tag]
+    setup [:create_tag, :register_and_log_in_user]
 
     test "lists all tags", %{conn: conn, tag: tag} do
       {:ok, _index_live, html} = live(conn, ~p"/tags")
@@ -78,7 +78,7 @@ defmodule SlinkWeb.TagLiveTest do
   end
 
   describe "Show" do
-    setup [:create_tag]
+    setup [:create_tag, :register_and_log_in_user]
 
     test "displays tag", %{conn: conn, tag: tag} do
       {:ok, _show_live, html} = live(conn, ~p"/tags/#{tag}")

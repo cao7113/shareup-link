@@ -4,6 +4,8 @@
     <.link :if={@current_user} patch={~p"/links/new"}>
       <.button>New Link</.button>
     </.link>
+
+    <.button phx-click="auto_match_tags">AutoMatchTags</.button>
   </:actions>
 </.header>
 
@@ -25,6 +27,9 @@
     <.link href={link.url}>
       <.header>
         <%= link.title |> String.slice(0..60) %>
+        <%= for tag <- link.tags do %>
+          <span class="bg-blue-300"><%= tag %></span>
+        <% end %>
         <:subtitle>
           <%= link.url |> String.slice(0..55) %>
         </:subtitle>

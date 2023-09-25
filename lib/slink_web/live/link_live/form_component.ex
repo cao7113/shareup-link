@@ -1,6 +1,5 @@
 defmodule SlinkWeb.LinkLive.FormComponent do
   use SlinkWeb, :live_component
-
   alias Slink.Links
 
   @impl true

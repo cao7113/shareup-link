@@ -44,4 +44,18 @@ defmodule SlinkWeb.TagLive.Index do
 
     {:noreply, stream_delete(socket, :tags, tag)}
   end
+
+  def handle_event("touch_auto_match", %{"id" => id}, socket) do
+    tag = Tags.get_tag!(id)
+    {:ok, tag} = Tags.update_tag(tag, %{auto_match_touch_at: Timex.now()})
+
+    {:noreply, stream_insert(socket, :tags, tag)}
+  end
+
+  def handle_event("touch_pin_top", %{"id" => id}, socket) do
+    tag = Tags.get_tag!(id)
+    {:ok, tag} = Tags.update_tag(tag, %{pin_top_touch_at: Timex.now()})
+
+    {:noreply, stream_insert(socket, :tags, tag)}
+  end
 end

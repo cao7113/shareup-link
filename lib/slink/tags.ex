@@ -20,6 +20,50 @@ defmodule Slink.Tags do
     Repo.all(Tag)
   end
 
+  def auto_match_tags(str, opts \\ []) when is_binary(str) do
+    auto_match_regex(opts)
+    |> case do
+      nil ->
+        []
+
+      re ->
+        raw_names =
+          Regex.scan(re, str, capture: :all_but_first)
+          |> List.flatten()
+          |> Enum.uniq()
+
+        Tag.where(name: raw_names)
+        |> Enum.map(& &1.name)
+    end
+  end
+
+  def auto_match_regex(opts \\ []) do
+    # TODO: use cache
+    get_tags_to_auto_match(opts)
+    |> case do
+      [] ->
+        nil
+
+      tags ->
+        words =
+          tags
+          |> Enum.map(& &1.name)
+          |> Enum.join("|")
+
+        Regex.compile!("(#{words})", "i")
+    end
+  end
+
+  def get_tags_to_auto_match(opts \\ []) do
+    limit = opts[:limit] || 20
+
+    Tag
+    |> where([t], not is_nil(t.auto_match_touch_at))
+    |> order_by([t], desc: t.auto_match_touch_at)
+    |> limit(^limit)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single tag.
 

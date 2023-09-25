@@ -2,7 +2,7 @@
   Tag <%= @tag.id %>
   <:subtitle>This is a tag record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/tags/#{@tag}/show/edit"} phx-click={JS.push_focus()}>
+    <.link :if={@current_user} patch={~p"/tags/#{@tag}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit tag</.button>
     </.link>
   </:actions>
