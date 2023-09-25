@@ -5,8 +5,8 @@ defmodule SlinkWeb.LinkLiveTest do
   import Slink.LinksFixtures
   import Slink.AccountsFixtures
 
-  @create_attrs %{title: "some title", url: "some url"}
-  @update_attrs %{title: "some updated title", url: "some updated url"}
+  @create_attrs %{title: "some title", url: "http://a.b/some-url"}
+  @update_attrs %{title: "some updated title", url: "http://a.b/some-updated-url"}
   @invalid_attrs %{title: nil, url: nil}
 
   defp create_link(_) do

@@ -1,7 +1,7 @@
 <.header>
   Listing Tags
-  <:actions>
-    <.link :if={@current_user} patch={~p"/tags/new"}>
+  <:actions :if={@current_user}>
+    <.link patch={~p"/tags/new"}>
       <.button>New Tag</.button>
     </.link>
   </:actions>

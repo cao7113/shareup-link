@@ -1,14 +1,12 @@
 defmodule Slink.Sites do
   import Ecto.Query
   alias Slink.Links
-  alias Slink.Repo
   alias Slink.Sites
 
-  def load_from_links! do
+  def gen_from_links! do
     Links.Link
     |> where([l], is_nil(l.site_id))
-    |> Repo.all()
-    # todo
+    |> Links.Link.stream_where()
     |> Enum.each(fn it ->
       {shost, domain} = base_from(it.url)
 

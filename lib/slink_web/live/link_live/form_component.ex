@@ -19,7 +19,7 @@ defmodule SlinkWeb.LinkLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:title]} type="text" label="Title" />
-        <.input field={@form[:url]} type="text" label="Url" />
+        <.input field={@form[:url]} type="url" label="Url" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Link</.button>
         </:actions>

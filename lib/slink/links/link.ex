@@ -30,6 +30,7 @@ defmodule Slink.Links.Link do
     link
     |> cast(attrs, [:title, :url, :site_id, :tags])
     |> validate_required([:title, :url])
+    |> validate_format(:url, ~r/:\/\/[^\s]+/)
     |> unique_constraint(:url)
     |> prepare_changes(fn changeset ->
       case changeset.action do

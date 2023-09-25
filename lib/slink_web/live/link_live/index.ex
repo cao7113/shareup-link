@@ -69,7 +69,17 @@ defmodule SlinkWeb.LinkLive.Index do
 
     new_sock =
       socket
-      |> put_flash(:info, "Refresh auto tags #{Timex.now()}")
+      |> put_flash(:info, "Refresh links auto tags #{Timex.now()}")
+
+    {:noreply, new_sock}
+  end
+
+  def handle_event("generate_sites", %{}, socket) do
+    Slink.Sites.gen_from_links!()
+
+    new_sock =
+      socket
+      |> put_flash(:info, "Generate sites at #{Timex.now()}")
 
     {:noreply, new_sock}
   end

@@ -4,13 +4,15 @@ defmodule SlinkWeb.LinkControllerTest do
   import Slink.LinksFixtures
   alias Slink.Links.Link
 
+  @some_url "http://a.b/some-url"
+  @some_update_url "http://a.b/some-updated-url"
   @create_attrs %{
     title: "some title",
-    url: "some url"
+    url: @some_url
   }
   @update_attrs %{
     title: "some updated title",
-    url: "some updated url"
+    url: @some_update_url
   }
   @invalid_attrs %{title: nil, url: nil}
 
@@ -40,7 +42,7 @@ defmodule SlinkWeb.LinkControllerTest do
       assert %{
                "id" => ^id,
                "title" => "some title",
-               "url" => "some url"
+               "url" => @some_url
              } = json_response(conn, 200)["data"]
 
       conn = post(conn, ~p"/api/links", link: @create_attrs)
@@ -68,7 +70,7 @@ defmodule SlinkWeb.LinkControllerTest do
       assert %{
                "id" => ^id,
                "title" => "some updated title",
-               "url" => "some updated url"
+               "url" => @some_update_url
              } = json_response(conn, 200)["data"]
     end
 

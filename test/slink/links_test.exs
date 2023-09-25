@@ -8,6 +8,8 @@ defmodule Slink.LinksTest do
 
     import Slink.LinksFixtures
 
+    @some_url "http://a.b/some-url"
+    @some_update_url "http://a.b/some-updated-url"
     @invalid_attrs %{title: nil, url: nil}
 
     test "list_links/0 returns all links" do
@@ -21,17 +23,17 @@ defmodule Slink.LinksTest do
     end
 
     test "create_link/1 with valid data creates a link" do
-      valid_attrs = %{title: "some title", url: "some url"}
+      valid_attrs = %{title: "some title", url: @some_url}
 
       assert {:ok, %Link{} = link} = Links.create_link(valid_attrs)
       assert link.title == "some title"
-      assert link.url == "some url"
+      assert link.url == @some_url
 
       # create again
       {:error,
        %{
          action: :insert,
-         changes: %{title: "some title", url: "some url"},
+         changes: %{title: "some title", url: @some_url},
          errors: [
            url:
              {"has already been taken", [constraint: :unique, constraint_name: "links_url_index"]}
@@ -55,11 +57,11 @@ defmodule Slink.LinksTest do
 
     test "update_link/2 with valid data updates the link" do
       link = link_fixture()
-      update_attrs = %{title: "some updated title", url: "some updated url"}
+      update_attrs = %{title: "some updated title", url: @some_update_url}
 
       assert {:ok, %Link{} = link} = Links.update_link(link, update_attrs)
       assert link.title == "some updated title"
-      assert link.url == "some updated url"
+      assert link.url == @some_update_url
     end
 
     test "update_link/2 with invalid data returns error changeset" do

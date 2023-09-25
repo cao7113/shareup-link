@@ -1,11 +1,12 @@
 <.header>
   Listing Links
-  <:actions>
-    <.link :if={@current_user} patch={~p"/links/new"}>
+  <:actions :if={@current_user}>
+    <.link patch={~p"/links/new"}>
       <.button>New Link</.button>
     </.link>
 
     <.button phx-click="auto_match_tags">AutoMatchTags</.button>
+    <.button phx-click="generate_sites">GenerateSites</.button>
   </:actions>
 </.header>
 
