@@ -1,10 +1,12 @@
 defmodule SlinkWeb.Router do
   use SlinkWeb, :router
   import SlinkWeb.UserAuth
+  import SlinkWeb.UserAgentTracer
 
   pipeline :browser do
     plug(:accepts, ["html"])
     plug(:fetch_session)
+    plug(:trace_agent)
     plug(:fetch_live_flash)
     plug(:put_root_layout, html: {SlinkWeb.Layouts, :root})
     plug(:protect_from_forgery)
@@ -27,7 +29,7 @@ defmodule SlinkWeb.Router do
     live("/test-live", TestLive, :test)
     live("/test-form-live", TestFormLive, :test)
 
-    live_session :live,
+    live_session :livings,
       on_mount: [{SlinkWeb.UserAuth, :mount_current_user}] do
       live("/", LinkLive.Index, :index)
 
@@ -49,8 +51,6 @@ defmodule SlinkWeb.Router do
     get("/welcome", PageController, :home)
     get("/page", PageController, :index)
     get("/plain-page", PageController, :plain)
-    get("/test", PageController, :test)
-    get("/tailwind", PageController, :tailwind)
   end
 
   ############################################################
@@ -64,6 +64,8 @@ defmodule SlinkWeb.Router do
 
     resources("/links", LinkController, except: [:new, :edit])
   end
+
+  ## dev-tools
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:slink, :dev_routes) do
@@ -79,6 +81,9 @@ defmodule SlinkWeb.Router do
 
       live_dashboard("/dashboard", metrics: SlinkWeb.Telemetry)
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
+
+      get("/test", SlinkWeb.PageController, :test)
+      get("/tailwind", SlinkWeb.PageController, :tailwind)
     end
   end
 

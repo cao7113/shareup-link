@@ -2,7 +2,28 @@
 
 <h1>Test Page</h1>
 
-<div> 
-UserAgent:
-<%= Plug.Conn.get_req_header(@conn, "user-agent")|>List.first %>
-</div>
+<ul class="list-disc">
+  <li>
+    UserAgent: <%= Plug.Conn.get_req_header(@conn, "user-agent") |> List.first() %>
+  </li>
+
+  <li>
+    Req Cookies: <%= @conn.req_cookies() |> inspect %>
+  </li>
+
+  <li>
+    All Cookies: <%= @conn.cookies() |> inspect %>
+  </li>
+
+  <li>
+    Session: <%= Plug.Conn.get_session(@conn) |> inspect %>
+  </li>
+
+  <li>
+    RemoteIP: <%= @conn.remote_ip |> IpHelper.as_string() %>
+  </li>
+
+    <li>
+    Current UserAgent: <%= @current_agent |> inspect() %>
+  </li>
+</ul>

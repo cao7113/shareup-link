@@ -30,6 +30,15 @@ defmodule SlinkWeb.UserAuth do
     token = Accounts.generate_user_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
 
+    if current_agent = conn.assigns[:current_agent] do
+      attrs = %{
+        last_user_id: user.id,
+        last_ip: conn.remote_ip |> IpHelper.as_string()
+      }
+
+      Accounts.UserAgent.update!(current_agent, attrs)
+    end
+
     conn
     |> renew_session()
     |> put_token_in_session(token)
@@ -99,18 +108,18 @@ defmodule SlinkWeb.UserAuth do
 
   defp ensure_user_token(conn) do
     if token = get_session(conn, :user_token) do
-      Logger.debug(
-        "==use session token: #{token |> Base.encode16()} url-encode64: #{token |> Base.url_encode64()} raw: #{token |> inspect}"
-      )
+      # Logger.debug(
+      #   "==use session token: #{token |> Base.encode16()} url-encode64: #{token |> Base.url_encode64()} raw: #{token |> inspect}"
+      # )
 
       {token, conn}
     else
       conn = fetch_cookies(conn, signed: [@remember_me_cookie])
 
       if token = conn.cookies[@remember_me_cookie] do
-        Logger.info(
-          "==use remember-me cookie to restore token: #{token |> Base.encode16()} url-encode64: #{token |> Base.url_encode64()} raw: #{token |> inspect}"
-        )
+        # Logger.info(
+        #   "==use remember-me cookie to restore token: #{token |> Base.encode16()} url-encode64: #{token |> Base.url_encode64()} raw: #{token |> inspect}"
+        # )
 
         {token, put_token_in_session(conn, token)}
       else
@@ -237,10 +246,6 @@ defmodule SlinkWeb.UserAuth do
   end
 
   defp put_token_in_session(conn, token) do
-    Logger.debug(
-      "put user-token session: #{token |> Base.encode16()} url-encode64: #{Base.url_encode64(token)} raw: #{token |> inspect}"
-    )
-
     conn
     |> put_session(:user_token, token)
     |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")

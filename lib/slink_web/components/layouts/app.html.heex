@@ -11,7 +11,7 @@
         Tags
       </a>
       <%= if Slink.env_dev? do %>
-        <a href={~p"/tailwind"} class="hover:text-zinc-700">
+        <a href={~p"/dev/tailwind"} class="hover:text-zinc-700">
           Tailwind Page
         </a>
         <a href="/dev/mailbox" class="hover:text-zinc-700" target="_blank">
@@ -32,6 +32,13 @@
         <%= if @current_user do %>
           <li class="text-[0.8125rem] leading-6 text-zinc-900">
             <%= @current_user.email %>
+      
+            <%=if @current_user.admin_role do %>
+            <span class="text-rose-600">
+            (<%=@current_user.admin_role %>)
+            </span>
+            <%end %>
+
           </li>
           <li>
             <.link
