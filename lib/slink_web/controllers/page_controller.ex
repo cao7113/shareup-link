@@ -1,5 +1,8 @@
 defmodule SlinkWeb.PageController do
   use SlinkWeb, :controller
+  import SlinkWeb.UserAuth
+
+  plug(:require_authenticated_admin when action in [:test])
 
   def index(conn, _params) do
     render(conn, :index)

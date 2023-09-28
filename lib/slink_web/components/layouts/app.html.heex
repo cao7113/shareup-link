@@ -10,19 +10,24 @@
       <a href={~p"/tags"} class="hover:underline hover:text-zinc-700">
         Tags
       </a>
-      <%= if Slink.env_dev? do %>
-        <a href={~p"/dev/tailwind"} class="hover:text-zinc-700">
+      <%= if Slink.env_dev?() do %>
+        <a href={~p"/tailwind"} class="hover:text-zinc-700">
           Tailwind Page
         </a>
         <a href="/dev/mailbox" class="hover:text-zinc-700" target="_blank">
           MailBox
         </a>
       <% end %>
-      <%= if Slink.env_dev?() || Slink.Accounts.is_admin?(@current_user) do %>
-        <a href={~p"/admin"} class="hover:text-zinc-700">
+      <%= if Slink.env_dev?()||Slink.Accounts.is_admin?(@current_user) do %>
+        <a href={~p"/test"} class="hover:text-zinc-700">
+          Test Page
+        </a>
+      <% end %>
+      <%= if Slink.Accounts.is_admin?(@current_user) do %>
+        <a href={~p"/admin"} class="hover:text-zinc-700" target="_blank">
           Admin
         </a>
-        <a href={~p"/admin/accounts/user"} class="hover:text-zinc-700">
+        <a href={~p"/admin/accounts/user"} class="hover:text-zinc-700" target="_blank">
           UserAdmin
         </a>
       <% end %>

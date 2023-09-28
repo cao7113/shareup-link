@@ -1,9 +1,7 @@
 defmodule SlinkWeb.UserAgentTracer do
   use SlinkWeb, :verified_routes
   require Logger
-
   import Plug.Conn
-  # import Phoenix.Controller
 
   alias Slink.Accounts
 
@@ -11,7 +9,9 @@ defmodule SlinkWeb.UserAgentTracer do
   @user_agent_cookie "_slink_tracer"
   @user_agent_options [sign: true, max_age: @max_age, same_site: "Lax"]
 
-  def trace_agent(conn, _opts) do
+  def init(opts), do: opts
+
+  def call(conn, _opts) do
     ua = get_req_header(conn, "user-agent") |> List.first()
     do_trace(conn, ua)
   end
@@ -22,23 +22,41 @@ defmodule SlinkWeb.UserAgentTracer do
     conn = fetch_cookies(conn, signed: [@user_agent_cookie])
 
     {agent, conn} =
-      if agent_id = conn.cookies[@user_agent_cookie] do
-        agent = Accounts.UserAgent.find(agent_id)
-        {agent, conn}
-      else
-        agent =
-          %{
-            agent: ua,
-            last_ip: conn.remote_ip |> IpHelper.as_string()
-          }
-          |> Accounts.UserAgent.create!()
+      conn.cookies[@user_agent_cookie]
+      |> case do
+        nil ->
+          nil
 
-        {agent,
-         conn
-         |> put_resp_cookie(@user_agent_cookie, agent.id, @user_agent_options)}
+        agent_id ->
+          Accounts.UserAgent.find_by(id: agent_id)
+          |> case do
+            # maybe found invalid agent-id
+            nil -> nil
+            agent -> agent
+          end
+      end
+      |> case do
+        nil ->
+          agent =
+            %{
+              agent: ua,
+              last_user_id: user_id(conn),
+              last_ip: conn.remote_ip |> IpHelper.as_string()
+            }
+            |> Accounts.UserAgent.create!()
+
+          {agent,
+           conn
+           |> put_resp_cookie(@user_agent_cookie, agent.id, @user_agent_options)}
+
+        found ->
+          {found, conn}
       end
 
     conn
     |> assign(:current_agent, agent)
   end
+
+  def user_id(%{assigns: %{current_user: u}}) when not is_nil(u), do: u.id
+  def user_id(_), do: nil
 end

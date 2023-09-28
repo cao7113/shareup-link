@@ -8,8 +8,10 @@
   </li>
 
   <li>
-    Req Cookies: <%= @conn.req_cookies() |> inspect %>
+    Req Headers: <%= @conn.req_headers |> inspect %>
   </li>
+
+
 
   <li>
     All Cookies: <%= @conn.cookies() |> inspect %>

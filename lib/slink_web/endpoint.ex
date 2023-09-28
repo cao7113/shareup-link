@@ -13,7 +13,7 @@ defmodule SlinkWeb.Endpoint do
 
   socket("/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]])
 
-  socket "/lab/echo-socket", EchoSocket, websocket: true, longpoll: true
+  socket("/lab/echo-socket", EchoSocket, websocket: true, longpoll: true)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -28,12 +28,13 @@ defmodule SlinkWeb.Endpoint do
 
   # configure the path to your application static assets in :at
   # the path must end with `/kaffy`
-  plug Plug.Static,
+  plug(Plug.Static,
     # or "/path/to/your/static/kaffy"
     at: "/kaffy",
     from: :kaffy,
     gzip: false,
     only: ~w(assets)
+  )
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -61,5 +62,7 @@ defmodule SlinkWeb.Endpoint do
   plug(Plug.MethodOverride)
   plug(Plug.Head)
   plug(Plug.Session, @session_options)
+  # https://github.com/ajvondrak/remote_ip/issues/30
+  plug(RemoteIp, headers: ["fly-client-ip"])
   plug(SlinkWeb.Router)
 end

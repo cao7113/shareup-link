@@ -21,6 +21,7 @@ defmodule Remote do
     with {:ok, resp} <- Req.get(url: url, params: params) do
       resp.body["data"]
       |> Enum.map(fn it -> Map.take(it, ["title", "url"]) end)
+      # todo order by id
       |> Slink.Links.create_links()
     end
   end
