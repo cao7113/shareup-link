@@ -44,12 +44,18 @@ defmodule SlinkWeb.Router do
       live("/tags/:id/edit", TagLive.Index, :edit)
       live("/tags/:id", TagLive.Show, :show)
       live("/tags/:id/show/edit", TagLive.Show, :edit)
+
+      live "/notes", NoteLive.Index, :index
+      live "/notes/new", NoteLive.Index, :new
+      live "/notes/:id/edit", NoteLive.Index, :edit
+      live "/notes/:id", NoteLive.Show, :show
+      live "/notes/:id/show/edit", NoteLive.Show, :edit
     end
 
     ## Page Controller
-    get("/welcome", PageController, :home)
+    get("/welcome", PageController, :welcome)
     get("/page", PageController, :index)
-    get("/plain-page", PageController, :plain)
+    get("/page/blank", PageController, :blank)
     get("/test", PageController, :test)
     get("/tailwind", PageController, :tailwind)
   end

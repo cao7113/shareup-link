@@ -28,6 +28,7 @@ defmodule SlinkWeb.UserAgentTracer do
           nil
 
         agent_id ->
+          # get maybe existing agent
           Accounts.UserAgent.find_by(id: agent_id)
           |> case do
             # maybe found invalid agent-id
@@ -37,7 +38,7 @@ defmodule SlinkWeb.UserAgentTracer do
       end
       |> case do
         nil ->
-          agent =
+          new_agent =
             %{
               agent: ua,
               last_user_id: user_id(conn),
@@ -45,9 +46,11 @@ defmodule SlinkWeb.UserAgentTracer do
             }
             |> Accounts.UserAgent.create!()
 
-          {agent,
-           conn
-           |> put_resp_cookie(@user_agent_cookie, agent.id, @user_agent_options)}
+          conn_with_agent =
+            conn
+            |> put_resp_cookie(@user_agent_cookie, new_agent.id, @user_agent_options)
+
+          {new_agent, conn_with_agent}
 
         found ->
           {found, conn}
