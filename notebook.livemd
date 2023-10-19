@@ -10,8 +10,8 @@ Mix.install(
 )
 ```
 
-## Try remote console
+## Try run code in app context
 
 ```elixir
-Slink.Links.Link.first()
+Slink.Links.Link.last()
 ```

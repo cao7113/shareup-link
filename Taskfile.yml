@@ -6,7 +6,7 @@ env:
 tasks:
   default: mix test
   sh: iex --erl "-kernel shell_history enabled" -S mix
-  run: iex --erl "-kernel shell_history enabled" -S mix phx.server
+  run: iex --erl "-kernel shell_history enabled" --sname slink-local@rjhe --cookie slink-local-cookie -S mix phx.server
   sql: pgcli slink_dev
   mail: open $LOCAL_HOST/dev/mailbox
 
