@@ -1,0 +1,17 @@
+# Slink notebook
+
+```elixir
+Mix.install(
+  [
+    {:slink, path: __DIR__, env: :dev}
+  ],
+  config_path: :slink,
+  lockfile: :slink
+)
+```
+
+## Try remote console
+
+```elixir
+Slink.Links.Link.first()
+```
