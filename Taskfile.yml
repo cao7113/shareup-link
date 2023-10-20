@@ -30,3 +30,18 @@ tasks:
     cmds:
       - _build/dev/rel/slink/bin/slink stop
   lps: task lp-stop && task lp-run -- start
+
+  ## Fly tasks
+  fly: fly deploy
+  # fly ssh issue --agent
+  fiex: fly ssh console --pty --select -C "/app/bin/slink remote"
+  fsh: fly ssh console
+  # set cookie in fly.toml
+  # Base.url_encode64(:crypto.strong_rand_bytes(40))
+  # get cookie
+  # iex> Node.get_cookie()
+
+  fapp: fly apps list
+  fip: fly ips private --app slink
+
+  fdig: fly dig TXT _apps.internal -o personal

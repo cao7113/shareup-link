@@ -16,6 +16,7 @@ swap_size_mb = 512
 [env]
   PHX_HOST = "slink.fly.dev"
   PORT = "8080"
+  RELEASE_COOKIE = "R7YneTnShZKIZAM8XxkURpS_BMSofvP12OdXWgOfUs97QKLtKXVFyA=="
 
 [http_service]
   internal_port = 8080

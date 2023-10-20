@@ -1,4 +1,4 @@
-# Slink notebook
+# Slink Docs and Tutorials
 
 ```elixir
 Mix.install(
@@ -15,3 +15,7 @@ Mix.install(
 ```elixir
 Slink.Links.Link.last()
 ```
+
+## References
+
+[Remote Console in Livebook](remote-console.livemd)
